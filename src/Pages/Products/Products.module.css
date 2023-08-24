@@ -1,0 +1,81 @@
+.wrapper {
+    width: 100%;
+    max-width: 100%;
+    height: calc(100vh - 70px); /* 60px navbar + 30px margin top */
+    display: flex;
+    margin-top: 10px;
+    justify-content: flex-start;
+    overflow-x: hidden;
+}
+
+.leftSection {
+    padding-top: 30px;
+    width: 80%;
+    height: calc(100% - 30px);
+    overflow-y: auto;
+}
+
+.rightSection {
+    margin-top: 30px;
+    width: 20%;
+    height: calc(100% - 30px);
+    overflow-y: auto;
+}
+
+.articleWrapper {
+    display: block;
+    width: 90%;
+    margin: auto;
+    margin-top:10px;
+    margin-bottom: 10px;
+    padding:20px;
+    height: 300px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.articleBody {
+    height: 280px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.articleImage {
+    width: 280px;
+    height: 220px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.articleInfo {
+    width: calc(100% - 320px); /* parent - 280px img - 40px padding*/
+    height: 180px;
+    padding:20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.articleFirstLineItems {
+    flex: 0 0 33.333333%;
+    text-align: center
+}
+
+.articleSecondLineItems {
+    flex: 0 0 100%;
+}
+
+.articlePrice {
+    text-align: left;
+    font-weight: bolder;
+    color: green;
+    font-size: 25px !important;
+    text-align: center
+}
+
+.articleButton {
+    margin:auto;
+}
