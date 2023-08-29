@@ -2,7 +2,7 @@ import { FC, MouseEvent, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../Store/store";
 import { IProduct } from "../../Models/Product";
-import { Box, Button, Chip, LinearProgress, Typography } from "@mui/material";
+import { Box, Button, Chip, Divider, LinearProgress, Typography } from "@mui/material";
 import css from './Products.module.css';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -12,11 +12,15 @@ import { SET_HTTP_AWAIT_ACTION } from "../../Store/Loading/Loading";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ADD_UNIT_TO_CART, IProductWithAmount, REMOVE_UNIT_FROM_CART } from "../../Store/Product/Product";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useNavigate } from "react-router-dom";
 
 export interface IProductsProps {
 }
 
 const Products:FC<IProductsProps> = (props:IProductsProps) => {
+
+    // Routes Navigator
+    const navigate = useNavigate();
 
     //Store Subscriptions
     const dispatch  = useDispatch<AppDispatch>();
@@ -44,7 +48,7 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
                     id:'0',
                     name:'NN Deep Tensor',
                     url: 'https://cdn.vectorstock.com/i/1000x1000/39/60/neural-net-neuron-network-vector-10723960.webp',
-                    price:152001.99,
+                    price: 152001.99,
                     users: new Array<IUser>(
                         {name: 'Marco'  , surname: 'Petrini' , rating: 5},
                         {name: 'Roberto', surname: 'Sannino' , rating: 5},
@@ -53,9 +57,9 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
                 },
                 {
                     id:'1',
-                    name:'Maglietta Scudetto Inter',
+                    name:'Maglietta Inter',
                     url: 'https://www.picclickimg.com/xt0AAOSwJTRhUvAd/Maglia-INTER-2021-2022-maglietta-con-patch-scudetto.webp',
-                    price:98.99,
+                    price: 98.99,
                     users: new Array<IUser>(
                         {name: 'Leonardo', surname: 'Marrancone', rating: 5},
                         {name: 'Rosario' , surname: 'Borgesi'   , rating: 5},
@@ -66,7 +70,7 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
                     id:'2',
                     name:'Ibanez Guitar',
                     url: 'https://cdn.shopify.com/s/files/1/0573/5386/3220/files/IBANEZ-RGR221PA--GIO---Aqua-Burst-2_1000x_5ee7151a-c390-464e-880b-b1d59b7b2458_480x480.jpg?v=1683603938',
-                    price:548.99,
+                    price: 548.99,
                     users: new Array<IUser>(
                         {name: 'Tommaso', surname: 'Zazzaretti' , rating: 5}
                     )
@@ -83,7 +87,10 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
     const removeButtonClickHandler = (event:MouseEvent<HTMLButtonElement>,product:IProduct) => {
         dispatch<PayloadAction<IProduct,string>>(REMOVE_UNIT_FROM_CART(product))
     }
-    
+    const paymentButtonClickHandler = (event:MouseEvent<HTMLButtonElement>) => {
+        navigate("/pagamento")
+    }
+
     return <Box className={css.wrapper}>
         <Box className={css.leftSection}>
             {isLoading ? 
@@ -125,7 +132,7 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
         <Box className={css.rightSection}>
                 <Box className={css.rightWrapper}>
                     <Box className={css.cartTitleWrapper}>
-                        <Typography className={css.cartText}>Cart</Typography>
+                        <Typography className={css.cartText}>Carrello</Typography>
                         <ShoppingCartIcon fontSize={"large"} className={css.cartImg}/>
                     </Box>
 
@@ -135,13 +142,27 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
                             : /* CartProducts List */
                             <Box className={css.articleSecondLineItems}>
                                 {cartProducts.map<JSX.Element>((product:IProductWithAmount,index:number)=>{
-                                    return <Chip key={index} size="small" icon={<AccountCircleIcon/>} label={product.name+" | Amount: "+product.amount} variant="outlined" 
+                                    return <Chip key={index} icon={<AccountCircleIcon/>} label={product.name+" | Amount: "+product.amount} variant="outlined" 
                                         onDelete={()=>dispatch<PayloadAction<IProduct,string>>(REMOVE_UNIT_FROM_CART(product))                                                }/>
                                 })}
                             </Box>
                         }
                     </Box>
-                        
+                    <Divider textAlign="left">Totale: </Divider>
+                    <Typography className={css.totalText}>
+                        {
+                            cartProducts.reduce<number>((acc:number,current:IProductWithAmount) => { 
+                                return acc+current.amount*current.price;
+                            },0).toFixed(2) + "$"
+                        }
+                    </Typography>
+
+                    <Box className={css.cartButton}>
+                        <Button variant="contained" disabled={cartProducts.length===0} onClick={paymentButtonClickHandler}>
+                            Vai al Pagamento
+                        </Button>
+                    </Box>
+
                 </Box>
                 
         </Box>

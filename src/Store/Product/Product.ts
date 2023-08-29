@@ -15,14 +15,14 @@ const initState:ProductState = {
     | 1) DEFINE ACTIONS |
     +-------------------+  */
 
-    export enum ProductsActionNames {
-        ADD_UNIT_TO_CART = "products/ADD_UNIT_TO_CART",
-        REMOVE_UNIT_FROM_CART = "products/REMOVE_UNIT_FROM_CART"
-    };
-    
-    //Define Redux Action creators to set <TPayload,TAction> for each action:
-    export const ADD_UNIT_TO_CART = createAction<IProduct,string>(ProductsActionNames.ADD_UNIT_TO_CART);
-    export const REMOVE_UNIT_FROM_CART = createAction<IProduct,string>(ProductsActionNames.REMOVE_UNIT_FROM_CART);
+export enum ProductsActionNames {
+    ADD_UNIT_TO_CART = "products/ADD_UNIT_TO_CART",
+    REMOVE_UNIT_FROM_CART = "products/REMOVE_UNIT_FROM_CART"
+};
+
+//Define Redux Action creators to set <TPayload,TAction> for each action:
+export const ADD_UNIT_TO_CART = createAction<IProduct,string>(ProductsActionNames.ADD_UNIT_TO_CART);
+export const REMOVE_UNIT_FROM_CART = createAction<IProduct,string>(ProductsActionNames.REMOVE_UNIT_FROM_CART);
 
 /*  +------------------------------------------+
     | 1) DEFINE A CASE REDUCER FOR EACH ACTION |

@@ -90,6 +90,7 @@
 .rightWrapper {
     height:100%;
     width: 100%;
+    overflow-x: hidden;
 }
 
 .cartTitleWrapper {
@@ -114,4 +115,19 @@
     height: auto;
     max-height: 400px;
     overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 40px;
+}
+
+.totalText {
+    text-align: left;
+    padding-left: 55px;
+    font-size: 30px !important;
+    color: green;
+}
+
+.cartButton {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
 }
