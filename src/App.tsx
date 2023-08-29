@@ -1,7 +1,7 @@
 import { AppBar, Box, Link, Toolbar, Typography } from '@mui/material';
 import { FC } from 'react';
 import { Link as RouterLinks, Navigate, Route, Routes } from 'react-router-dom';
-import ProductsList from './Pages/Products/Products';
+import Products from './Pages/Products/Products';
 import Cart from './Pages/Cart/Cart';
 
 export interface IAppProps {
@@ -32,7 +32,7 @@ const App:FC<IAppProps> = (props:IAppProps) => {
     {/* CONTENT */}
     <Routes>
         <Route path="/"  element={<Navigate to='/prodotti' />}/>
-        <Route path="/prodotti" element={<ProductsList></ProductsList>} />
+        <Route path="/prodotti" element={<Products></Products>} />
         <Route path="/carrello" element={<Cart></Cart>} />
     </Routes>
   </>

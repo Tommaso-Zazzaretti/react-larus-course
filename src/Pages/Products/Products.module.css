@@ -10,14 +10,14 @@
 
 .leftSection {
     padding-top: 30px;
-    width: 80%;
+    width: 70%;
     height: calc(100% - 30px);
     overflow-y: auto;
 }
 
 .rightSection {
-    margin-top: 30px;
-    width: 20%;
+    padding-top: 30px;
+    width: 30%;
     height: calc(100% - 30px);
     overflow-y: auto;
 }
@@ -78,4 +78,40 @@
 
 .articleButton {
     margin:auto;
+}
+
+
+
+
+
+
+
+
+.rightWrapper {
+    height:100%;
+    width: 100%;
+}
+
+.cartTitleWrapper {
+    height:50px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.cartText {
+    text-align: center;
+    font-size: 30px !important;
+    color: black;
+    padding-right: 10px;
+    display: inline-flex;
+}
+
+.cartProductListWrapper {
+    padding-top:40px;
+    margin-left: 30px;
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    overflow-y: auto;
 }

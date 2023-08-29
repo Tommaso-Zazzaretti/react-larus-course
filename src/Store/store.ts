@@ -1,10 +1,12 @@
 import { Action, applyMiddleware, combineReducers, configureStore, Dispatch, Middleware, MiddlewareAPI } from '@reduxjs/toolkit'
 
 import {ProductReducer} from './Product/Product';
+import { LoadingReducer } from './Loading/Loading';
 
 //Build the root reducer
 const rootReducer = combineReducers({
-    ProductReducer
+    ProductReducer,
+    LoadingReducer
     //... other reducers
 })
 export type RootState = ReturnType<typeof rootReducer>
