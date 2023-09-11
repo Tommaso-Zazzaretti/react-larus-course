@@ -32,23 +32,31 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
 
     // Execute this code after render
     useEffect(()=>{
+        // Make an http call
         dispatch<PayloadAction<boolean,string>>(SET_HTTP_AWAIT_ACTION(true));
         getProductsHttpCallAsync()
-        .then((products:Array<IProduct>) => { setProducts(products); })
-        .catch((error:Error)             => { setProducts(new Array<IProduct>()); })
-        .finally(() => { dispatch<PayloadAction<boolean,string>>(SET_HTTP_AWAIT_ACTION(false)); })
+        .then((products:Array<IProduct>) => { 
+            setProducts(products); 
+        })
+        .catch((error:Error) => { 
+            console.error(error); setProducts(new Array<IProduct>()); 
+        })
+        .finally(() => { 
+            dispatch<PayloadAction<boolean,string>>(SET_HTTP_AWAIT_ACTION(false)); 
+        })
     },[dispatch])
 
     // Logic
     const getProductsHttpCallAsync = ():Promise<Array<IProduct>> => {
-        // More Logic.........
+        // Simulate Backend Fetch Data Http Call ... NO rendering logic here
+        const SIMULATE_HTTP_CALL_MSEC = 2*1000; // 2 Sec
         return new Promise((resolve,reject)=>{
             const backendProducts:Array<IProduct> = Array<IProduct>(
                 {
                     id:'0',
                     name:'NN Deep Tensor',
                     url: 'https://cdn.vectorstock.com/i/1000x1000/39/60/neural-net-neuron-network-vector-10723960.webp',
-                    price: 152001.99,
+                    price: 1500,
                     users: new Array<IUser>(
                         {name: 'Marco'  , surname: 'Petrini' , rating: 5},
                         {name: 'Roberto', surname: 'Sannino' , rating: 5},
@@ -74,9 +82,18 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
                     users: new Array<IUser>(
                         {name: 'Tommaso', surname: 'Zazzaretti' , rating: 5}
                     )
+                },
+                {
+                    id:'3',
+                    name:'Ibanez Guitar',
+                    url: 'https://cdn.shopify.com/s/files/1/0573/5386/3220/files/IBANEZ-RGR221PA--GIO---Aqua-Burst-2_1000x_5ee7151a-c390-464e-880b-b1d59b7b2458_480x480.jpg?v=1683603938',
+                    price: 548.99,
+                    users: new Array<IUser>(
+                        {name: 'Tommaso', surname: 'Zazzaretti' , rating: 5}
+                    )
                 }
             ) 
-            setTimeout(()=>{resolve(backendProducts)},2*1000);
+            setTimeout(()=>{resolve(backendProducts)},SIMULATE_HTTP_CALL_MSEC);
         })
     }
 
