@@ -23,9 +23,6 @@ export interface IAppProps {
             * Centralizzare logica di Login 
                 (Observer => Provider/Redux)
 
-            * Scrivere componente Wrapper per aggiungere l'ascolto comune dei prodotti in carta dallo store 
-                (Decorator => HOC)
-
             * Scrivere componente Generica per le chip lists 
                 (Generic FC method) 
 */
