@@ -1,9 +1,10 @@
 import { AppBar, Box, Link, Toolbar, Typography } from '@mui/material';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Link as RouterLinks, Navigate, Route, Routes } from 'react-router-dom';
 import Products from './Pages/Products/Products';
 import Payment from './Pages/Payments/Payment';
 import Login from './Pages/Login/Login';
+import { LoginContext } from './Shared/Providers/LoginProvider';
 
 export interface IAppProps {
 }
@@ -31,46 +32,50 @@ export interface IAppProps {
 */
 
 const App:FC<IAppProps> = (props:IAppProps) => {
-  return ( <>
 
-    {/* NAV BAR */}
-    <Box sx={{ flexGrow: 1, height:'60px', maxHeight:'60px' }}>
-        <AppBar position="static" style={{display:'flex', justifyContent:'space-between', alignItems:'center', flexDirection:'row'}}>
-            <Toolbar style={{width:210, height:'60px', maxHeight:'60px !important'}}>
+    const [isLogged,setIsLogged] = useState<boolean>(false);
 
-                <Link component={RouterLinks} to="prodotti" style={{color:'white'}} sx={{ flexGrow: 1}}>
-                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
-                        Prodotti
-                    </Typography>
-                </Link>
-            
-                <Link component={RouterLinks} to="pagamento" style={{color:'white'}} sx={{ flexGrow: 1}}>
-                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
-                        Pagamento
-                    </Typography>
-                </Link>
+    return (
+        <LoginContext.Provider value={{isLogged,setIsLogged}}>
 
-            </Toolbar>
+            {/* NAV BAR */}
+            <Box sx={{ flexGrow: 1, height:'60px', maxHeight:'60px' }}>
+                <AppBar position="static" style={{display:'flex', justifyContent:'space-between', alignItems:'center', flexDirection:'row'}}>
+                    <Toolbar style={{width:210, height:'60px', maxHeight:'60px !important'}}>
 
-            <Toolbar style={{width:'auto', height:'60px', maxHeight:'60px !important'}}>
-                <Link component={RouterLinks} to="login" style={{color:'white'}} sx={{ flexGrow: 1}}>
-                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
-                        Login
-                    </Typography>
-                </Link>
-            </Toolbar>
-        </AppBar>
-    </Box>
+                        <Link component={RouterLinks} to="prodotti" style={{color:'white'}} sx={{ flexGrow: 1}}>
+                            <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
+                                Prodotti
+                            </Typography>
+                        </Link>
+                    
+                        <Link component={RouterLinks} to="pagamento" style={{color:'white'}} sx={{ flexGrow: 1}}>
+                            <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
+                                Pagamento
+                            </Typography>
+                        </Link>
 
-    {/* CONTENT */}
-    <Routes>
-        <Route path="/"  element={<Navigate to='/login' />}/>
-        <Route path="/login" element={<Login></Login>} />
-        <Route path="/prodotti"  element={<Products></Products>} />
-        <Route path="/pagamento" element={<Payment></Payment>} />
-    </Routes>
-  </>
-  );
+                    </Toolbar>
+
+                    <Toolbar style={{width:'auto', height:'60px', maxHeight:'60px !important'}}>
+                        <Link component={RouterLinks} to="login" style={{color:'white'}} sx={{ flexGrow: 1}}>
+                            <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
+                                {isLogged ? "Logout" : "Login"}
+                            </Typography>
+                        </Link>
+                    </Toolbar>
+                </AppBar>
+            </Box>
+
+            {/* CONTENT */}
+            <Routes>
+                <Route path="/"  element={<Navigate to='/login' />}/>
+                <Route path="/login" element={<Login></Login>} />
+                <Route path="/prodotti"  element={<Products></Products>} />
+                <Route path="/pagamento" element={<Payment></Payment>} />
+            </Routes>
+        </LoginContext.Provider>
+    );
 }
 
 export default App;

@@ -1,4 +1,4 @@
-import { FC, Fragment, useEffect, useRef, useState } from "react";
+import { FC, Fragment, useContext, useEffect, useRef, useState } from "react";
 import css from './Login.module.css';
 import { Backdrop, Box, Button, CircularProgress, TextField, Typography } from "@mui/material";
 import { UserCredentials } from "../../Models/Credentials";
@@ -7,6 +7,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { SET_HTTP_AWAIT_ACTION } from "../../Store/Loading/Loading";
 import { AppDispatch, RootState } from "../../Store/store";
 import { useDebounceHook } from "../../Shared/Hooks/useDebouceHook";
+import { LoginContext, LoginProviderData } from "../../Shared/Providers/LoginProvider";
 
 export interface ILoginProps {
 }
@@ -22,13 +23,9 @@ const Login:FC<ILoginProps> = (props:ILoginProps) => {
     const [password,setPassword,passwordSpinner,setPasswordSpinner] = useDebounceHook<string,boolean>("",false,500,(source:string)=>false);
     // Form Validation
     const [valid,setValid] = useState<boolean>(false);
-    // Login State
-    const [isLogged,setIsLogged] = useState<boolean>(false)
+    // Context Login Subscription
+    const userLoginCtx = useContext<LoginProviderData>(LoginContext);
     const loggedStore = useRef<UserCredentials|null>(null);
-
-    useEffect(()=>{
-        setIsLogged(loggedStore.current!==null);
-    },[])
 
     // Validate the form
     useEffect(() =>{
@@ -60,7 +57,7 @@ const Login:FC<ILoginProps> = (props:ILoginProps) => {
         return new Promise<void>((resolve,reject)=>{ setTimeout(()=>{resolve()},SIMULATE_HTTP_CALL_MSEC); })
         .then(() => { 
             loggedStore.current = { username, password }
-            setIsLogged(true);
+            userLoginCtx.setIsLogged(true);
         })
         .catch((error:Error) => { 
             console.error(error); 
@@ -73,7 +70,7 @@ const Login:FC<ILoginProps> = (props:ILoginProps) => {
 
     const logoutButtonClickHandler = (event:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         loggedStore.current = null
-        setIsLogged(false);
+        userLoginCtx.setIsLogged(false);
     }
 
     return <Fragment>
@@ -82,13 +79,13 @@ const Login:FC<ILoginProps> = (props:ILoginProps) => {
 
             <Typography>Login/Logout</Typography>
 
-            {!isLogged &&
+            {!userLoginCtx.isLogged &&
                 <Box className={css.inputBox}>
                     <TextField className={css.input} label="Username" value={username} onChange={usernameChangeHandler}/>
                     {userNameSpinner && <CircularProgress size={25} className={css.spinner}/>}
                 </Box>
             }
-            {!isLogged &&
+            {!userLoginCtx.isLogged &&
                 <Box className={css.inputBox}>
                     <TextField type="password" className={css.input} label="Password" value={password} onChange={passwordChangeHandler}/>
                     {passwordSpinner && <CircularProgress size={25} className={css.spinner}/>}
@@ -96,7 +93,7 @@ const Login:FC<ILoginProps> = (props:ILoginProps) => {
             }       
 
             <Box className={css.buttonsWrapper}>
-                    {isLogged 
+                    {userLoginCtx.isLogged 
                         ? <Button variant="contained" onClick={logoutButtonClickHandler}>Logout</Button>
                         : <Button variant="contained" disabled={!valid} onClick={loginButtonClickHandler}>Login</Button>
                     }

@@ -1,10 +1,11 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import css from './Payment.module.css';
 import { Box, Button, CircularProgress, TextField, Typography } from "@mui/material";
 import { IProductWithAmount } from "../../Store/Product/Product";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Store/store";
 import { useDebounceHook } from "../../Shared/Hooks/useDebouceHook";
+import { LoginProviderData, LoginContext } from "../../Shared/Providers/LoginProvider";
 
 export interface IPaymentProps {
 
@@ -21,15 +22,18 @@ const Payment:FC<IPaymentProps> = (props:IPaymentProps) => {
     const [total,setTotal] = useState<number>(0.0);
     const [valid,setValid] = useState<boolean>(false);
 
+    // Context listening
+    const userLoginCtx = useContext<LoginProviderData>(LoginContext);
+
     // Validate the form
     useEffect(() =>{
         const validateForm = ():boolean => {
             return cardNumber.length===19 && (/^\d+$/.test(cardNumber.replaceAll(" ",""))) &&
                 securityId.length===3 && (/^\d+$/.test(securityId)) &&
-                validThru.length===7 && (/^\d+$/.test(validThru.replace("/",""))) && total>0
+                validThru.length===7 && (/^\d+$/.test(validThru.replace("/",""))) && total>0 && userLoginCtx.isLogged
         }
         setValid(validateForm());
-    },[cardNumber,validThru,securityId,total]); 
+    },[cardNumber,validThru,securityId,total,userLoginCtx.isLogged]); 
 
     useEffect(()=>{
         setTotal(cartProducts.reduce<number>((acc:number,current:IProductWithAmount) => { 
