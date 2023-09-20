@@ -76,7 +76,7 @@ const Login:FC<ILoginProps> = (props:ILoginProps) => {
     const passwordChangeHandler = (event:React.ChangeEvent<HTMLInputElement>) => {
         const newPassword:string = event.target.value.trim();
         // Rendering States Changes
-        setPassword(newPassword.match(/.{1,4}/g)?.join('/') ?? newPassword);
+        setPassword(newPassword.trim() ?? newPassword);
         if(!userNameSpinner){ setPasswordSpinner(true);}
     }
 
@@ -117,7 +117,7 @@ const Login:FC<ILoginProps> = (props:ILoginProps) => {
             }
             {!isLogged &&
                 <Box className={css.inputBox}>
-                    <TextField className={css.input} label="Password" value={password} onChange={passwordChangeHandler}/>
+                    <TextField type="password" className={css.input} label="Password" value={password} onChange={passwordChangeHandler}/>
                     {passwordSpinner && <CircularProgress size={25} className={css.spinner}/>}
                 </Box>
             }       
