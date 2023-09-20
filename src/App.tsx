@@ -64,7 +64,7 @@ const App:FC<IAppProps> = (props:IAppProps) => {
 
     {/* CONTENT */}
     <Routes>
-        <Route path="/"  element={<Navigate to='/prodotti' />}/>
+        <Route path="/"  element={<Navigate to='/login' />}/>
         <Route path="/login" element={<Login></Login>} />
         <Route path="/prodotti"  element={<Products></Products>} />
         <Route path="/pagamento" element={<Payment></Payment>} />
