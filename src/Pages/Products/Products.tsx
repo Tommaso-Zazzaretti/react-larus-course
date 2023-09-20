@@ -82,15 +82,6 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
                     users: new Array<IUser>(
                         {name: 'Tommaso', surname: 'Zazzaretti' , rating: 5}
                     )
-                },
-                {
-                    id:'3',
-                    name:'Ibanez Guitar',
-                    url: 'https://cdn.shopify.com/s/files/1/0573/5386/3220/files/IBANEZ-RGR221PA--GIO---Aqua-Burst-2_1000x_5ee7151a-c390-464e-880b-b1d59b7b2458_480x480.jpg?v=1683603938',
-                    price: 548.99,
-                    users: new Array<IUser>(
-                        {name: 'Tommaso', surname: 'Zazzaretti' , rating: 5}
-                    )
                 }
             ) 
             setTimeout(()=>{resolve(backendProducts)},SIMULATE_HTTP_CALL_MSEC);
