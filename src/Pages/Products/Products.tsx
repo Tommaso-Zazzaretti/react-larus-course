@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useEffect, useState } from "react";
+import { FC, MouseEvent, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../Store/store";
 import { IProduct } from "../../Models/Product";
@@ -13,6 +13,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { ADD_UNIT_TO_CART, IProductWithAmount, REMOVE_UNIT_FROM_CART } from "../../Store/Product/Product";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useNavigate } from "react-router-dom";
+import { ProductsHttpService } from "../../Shared/Services/ProductsHttpService";
 
 export interface IProductsProps {
 }
@@ -27,6 +28,8 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
     const isLoading = useSelector<RootState,boolean>((state) => state.LoadingReducer.isOnHttpAwait);
     const cartProducts:Array<IProductWithAmount> = useSelector<RootState,Array<IProductWithAmount>>((state) => state.ProductReducer.products);
     
+    // Refs
+    const httpServiceRef = useRef<ProductsHttpService>(new ProductsHttpService());
     // Http Fetched Products
     const [products,setProducts] = useState<Array<IProduct>>(new Array<IProduct>());
 
@@ -34,7 +37,7 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
     useEffect(()=>{
         // Make an http call
         dispatch<PayloadAction<boolean,string>>(SET_HTTP_AWAIT_ACTION(true));
-        getProductsHttpCallAsync()
+        httpServiceRef.current.getProductsHttpCallAsync()
         .then((products:Array<IProduct>) => { 
             setProducts(products); 
         })
@@ -46,47 +49,6 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
         })
     },[dispatch])
 
-    // Logic
-    const getProductsHttpCallAsync = ():Promise<Array<IProduct>> => {
-        // Simulate Backend Fetch Data Http Call ... NO rendering logic here
-        const SIMULATE_HTTP_CALL_MSEC = 2*1000; // 2 Sec
-        return new Promise((resolve,reject)=>{
-            const backendProducts:Array<IProduct> = Array<IProduct>(
-                {
-                    id:'0',
-                    name:'NN Deep Tensor',
-                    url: 'https://cdn.vectorstock.com/i/1000x1000/39/60/neural-net-neuron-network-vector-10723960.webp',
-                    price: 1500,
-                    users: new Array<IUser>(
-                        {name: 'Marco'  , surname: 'Petrini' , rating: 5},
-                        {name: 'Roberto', surname: 'Sannino' , rating: 5},
-                        {name: 'Daniele', surname: 'Vendrame', rating: 5}
-                    )
-                },
-                {
-                    id:'1',
-                    name:'Maglietta Inter',
-                    url: 'https://www.picclickimg.com/xt0AAOSwJTRhUvAd/Maglia-INTER-2021-2022-maglietta-con-patch-scudetto.webp',
-                    price: 98.99,
-                    users: new Array<IUser>(
-                        {name: 'Leonardo', surname: 'Marrancone', rating: 5},
-                        {name: 'Rosario' , surname: 'Borgesi'   , rating: 5},
-                        {name: 'Luca'    , surname: 'Marignati' , rating: 5},
-                    )
-                },
-                {
-                    id:'2',
-                    name:'Ibanez Guitar',
-                    url: 'https://cdn.shopify.com/s/files/1/0573/5386/3220/files/IBANEZ-RGR221PA--GIO---Aqua-Burst-2_1000x_5ee7151a-c390-464e-880b-b1d59b7b2458_480x480.jpg?v=1683603938',
-                    price: 548.99,
-                    users: new Array<IUser>(
-                        {name: 'Tommaso', surname: 'Zazzaretti' , rating: 5}
-                    )
-                }
-            ) 
-            setTimeout(()=>{resolve(backendProducts)},SIMULATE_HTTP_CALL_MSEC);
-        })
-    }
 
     // Event Handlers
     const addButtonClickHandler = (event:MouseEvent<HTMLButtonElement>,product:IProduct) => {
