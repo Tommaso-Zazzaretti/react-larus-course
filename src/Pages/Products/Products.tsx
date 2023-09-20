@@ -2,7 +2,7 @@ import { FC, MouseEvent, useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../Store/store";
 import { IProduct } from "../../Models/Product";
-import { Box, Button, Chip, Divider, LinearProgress, Typography } from "@mui/material";
+import { Box, Button, Divider, LinearProgress, Typography } from "@mui/material";
 import css from './Products.module.css';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -14,6 +14,7 @@ import { ADD_UNIT_TO_CART, IProductWithAmount, REMOVE_UNIT_FROM_CART } from "../
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useNavigate } from "react-router-dom";
 import { ProductsHttpService } from "../../Shared/Services/ProductsHttpService";
+import { GenericChipList } from "../../Shared/Components/GenericChipList";
 
 export interface IProductsProps {
 }
@@ -87,12 +88,11 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
                                 </Box>
 
                                 {/* Users List */}
-                                <Box className={css.articleSecondLineItems}>
-                                    {product.users.map<JSX.Element>((user:IUser,index:number)=>{
-                                        return <Chip key={index} icon={<AccountCircleIcon/>} label={user.name+" "+user.surname+" | Rating: "+user.rating} variant="outlined"/>
-                                        })
-                                    }
-                                </Box>
+                                <GenericChipList<IUser> 
+                                    list={product.users} 
+                                    icon={<AccountCircleIcon/>}
+                                    getLabel={(user:IUser)=>user.name+" "+user.surname+" | Rating: "+user.rating}
+                                />  
                             </Box>
                         </Box>
                     </Box>
@@ -111,10 +111,12 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
                             ? <Typography>Non sono presenti articoli nel carrello.</Typography> 
                             : /* CartProducts List */
                             <Box className={css.articleSecondLineItems}>
-                                {cartProducts.map<JSX.Element>((product:IProductWithAmount,index:number)=>{
-                                    return <Chip key={index} icon={<AccountCircleIcon/>} label={product.name+" | Amount: "+product.amount} variant="outlined" 
-                                        onDelete={()=>dispatch<PayloadAction<IProduct,string>>(REMOVE_UNIT_FROM_CART(product))                                                }/>
-                                })}
+                                <GenericChipList<IProductWithAmount> 
+                                    list={cartProducts} 
+                                    icon={<AccountCircleIcon/>}
+                                    getLabel={(product:IProductWithAmount)=>product.name+" | Amount: "+product.amount}
+                                    onDelete={(elementToDelete:IProductWithAmount)=>dispatch<PayloadAction<IProduct,string>>(REMOVE_UNIT_FROM_CART(elementToDelete))}
+                                />
                             </Box>
                         }
                     </Box>
