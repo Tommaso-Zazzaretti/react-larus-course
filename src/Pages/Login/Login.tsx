@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { SET_HTTP_AWAIT_ACTION } from "../../Store/Loading/Loading";
 import { AppDispatch, RootState } from "../../Store/store";
+import { useDebounceHook } from "../../Shared/Hooks/useDebouceHook";
 
 export interface ILoginProps {
 }
@@ -16,11 +17,9 @@ const Login:FC<ILoginProps> = (props:ILoginProps) => {
     const isLoading = useSelector<RootState,boolean>((state) => state.LoadingReducer.isOnHttpAwait);
     
     // UserName
-    const [username,setUsername] = useState<string>("");
-    const [userNameSpinner,setUsernameSpinner] = useState<boolean>(false);
+    const [username,setUsername,userNameSpinner,setUsernameSpinner] = useDebounceHook<string,boolean>("",false,500,(source:string)=>false);
     // Password
-    const [password ,setPassword]  = useState<string>("");
-    const [passwordSpinner,setPasswordSpinner] = useState<boolean>(false);
+    const [password,setPassword,passwordSpinner,setPasswordSpinner] = useDebounceHook<string,boolean>("",false,500,(source:string)=>false);
     // Form Validation
     const [valid,setValid] = useState<boolean>(false);
     // Login State
@@ -31,38 +30,12 @@ const Login:FC<ILoginProps> = (props:ILoginProps) => {
         setIsLogged(loggedStore.current!==null);
     },[])
 
-    // Username Spinner
-    useEffect(() =>{
-        const timer:NodeJS.Timeout = setTimeout(() =>{ 
-            setUsernameSpinner(false)
-        },500);
-        return () => {
-            clearTimeout(timer); 
-        }
-    },[username]); 
-
-    // Password Spinner
-    useEffect(() =>{
-        const timer:NodeJS.Timeout = setTimeout(() =>{ 
-            setPasswordSpinner(false)
-        },500);
-        return () => { 
-            clearTimeout(timer); 
-        }
-    },[password]); 
-
     // Validate the form
     useEffect(() =>{
-        const timer:NodeJS.Timeout = setTimeout(() =>{ 
-            const validateForm = ():boolean => {
-                return username.replaceAll(" ","").length>0 
-                    && password.replaceAll(" ","").length>0
-            }
-            setValid(validateForm());
-        },100);
-        return () => { 
-            clearTimeout(timer); 
+        const validateForm = ():boolean => {
+            return username.replaceAll(" ","").length>0  && password.replaceAll(" ","").length>0
         }
+        setValid(validateForm());
     },[username,password]); 
 
     // Event handlers
@@ -76,7 +49,7 @@ const Login:FC<ILoginProps> = (props:ILoginProps) => {
     const passwordChangeHandler = (event:React.ChangeEvent<HTMLInputElement>) => {
         const newPassword:string = event.target.value.trim();
         // Rendering States Changes
-        setPassword(newPassword.match(/.{1,4}/g)?.join('/') ?? newPassword);
+        setPassword(newPassword.trim() ?? newPassword);
         if(!userNameSpinner){ setPasswordSpinner(true);}
     }
 
@@ -117,7 +90,7 @@ const Login:FC<ILoginProps> = (props:ILoginProps) => {
             }
             {!isLogged &&
                 <Box className={css.inputBox}>
-                    <TextField className={css.input} label="Password" value={password} onChange={passwordChangeHandler}/>
+                    <TextField type="password" className={css.input} label="Password" value={password} onChange={passwordChangeHandler}/>
                     {passwordSpinner && <CircularProgress size={25} className={css.spinner}/>}
                 </Box>
             }       

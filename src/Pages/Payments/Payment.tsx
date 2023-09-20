@@ -4,6 +4,7 @@ import { Box, Button, CircularProgress, TextField, Typography } from "@mui/mater
 import { IProductWithAmount } from "../../Store/Product/Product";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Store/store";
+import { useDebounceHook } from "../../Shared/Hooks/useDebouceHook";
 
 export interface IPaymentProps {
 
@@ -13,59 +14,21 @@ const Payment:FC<IPaymentProps> = (props:IPaymentProps) => {
 
     const cartProducts:Array<IProductWithAmount> = useSelector<RootState,Array<IProductWithAmount>>((state) => state.ProductReducer.products);
 
-    const [cardNumber,setCardNumber] = useState<string>("");
-    const [cardNumberSpinner,setCardNumberSpinner] = useState<boolean>(false);
-    const [validThru ,setValidThru]  = useState<string>("");
-    const [validThruSpinner,setValidThruSpinner] = useState<boolean>(false);
-    const [securityId,setSecurityId] = useState<string>("");
-    const [securityIdSpinner,setSecurityIdSpinner] = useState<boolean>(false);
+    const [cardNumber,setCardNumber,cardNumberSpinner,setCardNumberSpinner] = useDebounceHook<string,boolean>("",false,1000,(source:string)=>false)
+    const [validThru,setValidThru,validThruSpinner,setValidThruSpinner] = useDebounceHook<string,boolean>("",false,1000,(source:string)=>false)
+    const [securityId,setSecurityId,securityIdSpinner,setSecurityIdSpinner] = useDebounceHook<string,boolean>("",false,1000,(source:string)=>false)
 
     const [total,setTotal] = useState<number>(0.0);
     const [valid,setValid] = useState<boolean>(false);
 
-    // Card Number Spinner
-    useEffect(() =>{
-        const timer:NodeJS.Timeout = setTimeout(() =>{ 
-            setCardNumberSpinner(false)
-        },1000);
-        return () => {
-            clearTimeout(timer); 
-        }
-    },[cardNumber]); 
-
-    // Valid Thru Spinner
-    useEffect(() =>{
-        const timer:NodeJS.Timeout = setTimeout(() =>{ 
-            setValidThruSpinner(false)
-        },2000);
-        return () => { 
-            clearTimeout(timer); 
-        }
-    },[validThru]); 
-
-    // Valid Thru Spinner
-    useEffect(() =>{
-        const timer:NodeJS.Timeout = setTimeout(() =>{ 
-            setSecurityIdSpinner(false)
-        },2000);
-        return () => { 
-            clearTimeout(timer); 
-        }
-    },[securityId]); 
-
     // Validate the form
     useEffect(() =>{
-        const timer:NodeJS.Timeout = setTimeout(() =>{ 
-            const validateForm = ():boolean => {
-                return cardNumber.length===19 && (/^\d+$/.test(cardNumber.replaceAll(" ",""))) &&
-                    securityId.length===3 && (/^\d+$/.test(securityId)) &&
-                    validThru.length===7 && (/^\d+$/.test(validThru.replace("/",""))) && total>0
-            }
-            setValid(validateForm());
-        },100);
-        return () => { 
-            clearTimeout(timer); 
+        const validateForm = ():boolean => {
+            return cardNumber.length===19 && (/^\d+$/.test(cardNumber.replaceAll(" ",""))) &&
+                securityId.length===3 && (/^\d+$/.test(securityId)) &&
+                validThru.length===7 && (/^\d+$/.test(validThru.replace("/",""))) && total>0
         }
+        setValid(validateForm());
     },[cardNumber,validThru,securityId,total]); 
 
     useEffect(()=>{
@@ -73,8 +36,6 @@ const Payment:FC<IPaymentProps> = (props:IPaymentProps) => {
             return acc+current.amount*current.price;
         },0))
     },[cartProducts])
-
-    // useEffect(()=>console.log(cardNumberSpinner),[cardNumberSpinner]);
 
 
     // Event handlers
@@ -116,10 +77,6 @@ const Payment:FC<IPaymentProps> = (props:IPaymentProps) => {
         setSecurityIdSpinner(false);
         setValidThruSpinner(false);
     }
-
-    useEffect(()=>{
-        console.log("USE EFFECT")
-    },[cardNumber,cardNumberSpinner,validThru,validThruSpinner,securityId,securityIdSpinner])
 
     return <Box className={css.wrapper}>
         <Box className={css.paymentBox}>
