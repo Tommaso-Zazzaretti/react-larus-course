@@ -59,14 +59,14 @@ const Payment:FC<IPaymentProps> = (props:IPaymentProps) => {
             const validateForm = ():boolean => {
                 return cardNumber.length===19 && (/^\d+$/.test(cardNumber.replaceAll(" ",""))) &&
                     securityId.length===3 && (/^\d+$/.test(securityId)) &&
-                    validThru.length===7 && (/^\d+$/.test(validThru.replace("/","")))
+                    validThru.length===7 && (/^\d+$/.test(validThru.replace("/",""))) && total>0
             }
             setValid(validateForm());
         },100);
         return () => { 
             clearTimeout(timer); 
         }
-    },[cardNumber,validThru,securityId]); 
+    },[cardNumber,validThru,securityId,total]); 
 
     useEffect(()=>{
         setTotal(cartProducts.reduce<number>((acc:number,current:IProductWithAmount) => { 
