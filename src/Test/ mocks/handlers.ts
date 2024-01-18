@@ -13,3 +13,10 @@ export const handlers:Array<RequestHandler> = [
         return response(context.status(200),context.json(bodyContent))
     })
 ]
+
+export const error500Handlers:Array<RequestHandler> = [
+    rest.get<never,never,{data: Array<IElement>}>('https://datausa.io/api/data', 
+        (request:RestRequest<never, never>,response:ResponseComposition<{data: Array<IElement>;}>,context:RestContext) => {
+        return response(context.status(500))
+    })
+]

@@ -1,5 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import { render, screen } from '@testing-library/react'
+import { testMockServer } from './ mocks/server';
+import { error500Handlers } from './ mocks/handlers';
 
 export interface IElement { "ID Nation": string, "ID Year": number, "Population": number }
 export interface ComponentProps { }
@@ -23,6 +25,14 @@ const MyComponent:FC<ComponentProps> = (props:ComponentProps)=>{
     </React.Fragment> 
 } 
 
+
+test('Fetcher error 500 test', async ()=>{
+    testMockServer.use(...error500Handlers);
+    render(<MyComponent/>)
+    const element = await screen.findByText((text)=>text==='Http call failed');
+    expect(element).toBeInTheDocument();
+})
+
 test('Fetcher component test', async ()=>{
     render(<MyComponent/>)
     const elements = await screen.findAllByText((text)=>text==='Year: 2024 Population 2' || text==='Year: 2023 Population 1');
@@ -32,7 +42,3 @@ test('Fetcher component test', async ()=>{
     expect(e1!==undefined).toBe(true); expect(e1).toBeInTheDocument();
     expect(e2!==undefined).toBe(true); expect(e2).toBeInTheDocument();
 })
-
-
-
-
