@@ -6,7 +6,7 @@ export class ProductsHttpService {
     // Logic
     public getProductsHttpCallAsync = ():Promise<Array<IProduct>> => {
         // Simulate Backend Fetch Data Http Call ... NO rendering logic here
-        const SIMULATE_HTTP_CALL_MSEC = 2*1000; // 2 Sec
+        const SIMULATE_HTTP_CALL_MSEC = 2*100; // 2 Sec
         return new Promise((resolve,reject)=>{
             const backendProducts:Array<IProduct> = Array<IProduct>(
                 {

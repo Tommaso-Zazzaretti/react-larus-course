@@ -123,7 +123,7 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
                         }
                     </Box>
                     <Divider textAlign="left">Totale: </Divider>
-                    <Typography className={css.totalText}>
+                    <Typography className={css.totalText} data-testid="totale">
                         {
                             cartProducts.reduce<number>((acc:number,current:IProductWithAmount) => { 
                                 return acc+current.amount*current.price;
