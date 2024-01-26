@@ -69,7 +69,7 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
                     <LinearProgress />
                 </Box> : 
                 products.map<JSX.Element>((product:IProduct,index:number)=>{
-                    return <Box key={index} className={css.articleWrapper}>
+                    return <Box key={index} className={css.articleWrapper} data-testid = {"product_"+index}>
                         <Typography>{product.name}</Typography>
 
                         <Box className={css.articleBody}>
@@ -92,6 +92,7 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
                                     list={product.users} 
                                     icon={<AccountCircleIcon/>}
                                     getLabel={(user:IUser)=>user.name+" "+user.surname+" | Rating: "+user.rating}
+                                    testId={(e) => e.name + ' ' + e.surname}
                                 />  
                             </Box>
                         </Box>
@@ -116,6 +117,7 @@ const Products:FC<IProductsProps> = (props:IProductsProps) => {
                                     icon={<AccountCircleIcon/>}
                                     getLabel={(product:IProductWithAmount)=>product.name+" | Amount: "+product.amount}
                                     onDelete={(elementToDelete:IProductWithAmount)=>dispatch<PayloadAction<IProduct,string>>(REMOVE_UNIT_FROM_CART(elementToDelete))}
+                                    testId={(e) => e.name}
                                 />
                             </Box>
                         }

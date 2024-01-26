@@ -4,7 +4,8 @@ export interface IGenericChipListProps<T extends object>{
     list: Array<T>,
     icon: JSX.Element
     getLabel: (element:T)=>string,
-    onDelete?: (elementToDelete:T)=>void
+    onDelete?: (elementToDelete:T)=>void,
+    testId: (elem: T) => string
 }
 
 export const GenericChipList = <T extends object>(props:IGenericChipListProps<T>) => {
@@ -17,7 +18,7 @@ export const GenericChipList = <T extends object>(props:IGenericChipListProps<T>
                 label:props.getLabel(element),
                 onDelete: props.onDelete!==undefined ? ()=>props.onDelete!(element) : undefined
             }
-            return <Chip {...commonChipProps}/>
+            return <Chip data-testId={props.testId(element)} {...commonChipProps} role="chip"/>
         })}
     </>
 }
